@@ -1,12 +1,22 @@
 import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.36-alpha/deno-dom-wasm.ts";
 
-export async function getBooks(subCategoryId: string, count = 50) {
+export async function getBooks(subCategoryId: string, count = 25) {
   const searchPageLink =
     `http://libgen.is/search.php?req=topicid${subCategoryId}&open=0&res=${count}&view=detailed&phrase=1`;
   console.log(searchPageLink);
   const res = await fetch(searchPageLink);
   const html = await res.text();
+  return extractBooksFromPage(html)
+}
 
+
+export async function searchBook(query: string, count = 25){
+  const res = await fetch(`http://libgen.is/search.php?req=${query}&open=0&res=${count}&view=detailed&phrase=1&column=def`)
+  const html = await res.text()
+  return extractBooksFromPage(html)
+}
+
+function extractBooksFromPage(html: string){
   const document = new DOMParser().parseFromString(html, "text/html");
 
   if (document === null) return "An Error Occured";

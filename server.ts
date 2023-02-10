@@ -1,7 +1,7 @@
 import { Application, Router } from "https://deno.land/x/oak@v11.1.0/mod.ts";
 import { categories } from "./constants.ts";
-import { getBooks } from "./scrapers.ts";
-import { getBook, searchBook } from "./libgen.ts";
+import { getBooks, searchBook } from "./scrapers.ts";
+import { getBook} from "./libgen.ts";
 
 const router = new Router();
 router
@@ -37,8 +37,8 @@ router
       context.response.body = "Provide a book id (/search/:query)";
       return;
     }
-    await searchBook(context.params.query)
-    context.response.body = "Found";
+    const books = await searchBook(context.params.query)
+    context.response.body = books;
   });
 
 const app = new Application();
